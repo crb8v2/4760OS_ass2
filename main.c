@@ -15,19 +15,15 @@ void forkerMaster (int n) {
     // create forks
     for (counter1 = 1; counter1 < n; counter1++) {
         if ((childpid = fork()))
-//            execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
-//                    "Worker", NULL);
-
-//            if (childpid == 0)
-//                perror("fork error");
-//            else if (childpid == 0) {
-//                execl("Worker","Worker");
-//            }
             break;
     }
 
-//    execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2",
-//           "Worker", NULL);
+    // exec call to 'Worker' executable
+    execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+           "Worker", NULL);
+
+    //*** children never come back to here.
+
 
     fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
             counter1, (long)getpid(), (long)getppid(), (long)childpid);
@@ -44,30 +40,27 @@ void helpMenu() {
 
 int main (int argc, char **argv) {
 
-    int n = 0;
-    int c;
-    char errorString[256];
+    int c, n = 0, s = 0;
+    int isForkCalled = 0;
 
     // for options
-    while ((c = getopt (argc, argv, "hn:")) != -1)
+    while ((c = getopt (argc, argv, "hs:n:")) != -1)
         switch (c)
         {
             case 'h':
                 helpMenu();
                 break;
 
+            case 's':
+                s = atoi(optarg);
+
+                printf("\ninput for s was : %d\n", s);
+                break;
+
             case 'n':
-//                // checks for proper number of args
-//                if (argc != 4) {
-//                    fprintf(stderr, "Invalid number of command line args.");
-//                    return 1;
-//                }
-
                 //get command line values
-                n = atoi(argv[2]);
-
-                forkerMaster(n);
-
+                n = atoi(optarg);
+                isForkCalled = 1;
                 break;
 
             case '?':
@@ -83,6 +76,11 @@ int main (int argc, char **argv) {
             default:
                 abort ();
         }
+
+        if(isForkCalled == 1){
+            forkerMaster(n);
+        }
+
         sleep(1);
     return 0;
 }
