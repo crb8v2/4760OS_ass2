@@ -13,18 +13,26 @@ void forkerMaster (int n, int s) {
     int status;
 
 
-    for(counter1 = 0; counter1 < s; counter1++){
-        if (childpid = fork() == 0)
-            execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
-                   "Worker", NULL);
-    }
+    if(n >= s) {
+        for (counter1 = 0; counter1 < s; counter1++) {
+            if (childpid = fork() == 0)
+                execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+                      "Worker", NULL);
+        }
 
-    while (counter1 < n) {
-        wait(&status);
-        if (childpid = fork() == 0)
+        while (counter1 < n) {
+            wait(&status);
+            if (childpid = fork() == 0)
+                execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+                      "Worker", NULL);
+            counter1++;
+        }
+    } else {
+        for (counter1 = 0; counter1 < n; counter1++) {
+            if (childpid = fork() == 0)
             execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                    "Worker", NULL);
-        counter1++;
+        }
     }
 
 //    // create forks
