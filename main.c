@@ -5,12 +5,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define SHMKEY 123123
+#define BUFF_SZ sizeof(int)
 
 // performs forking and work to be done
 void forkerMaster (int n, int s) {
-    pid_t childpid = 0, wpid;
+    pid_t childpid = 0;
     int counter1;
     int status;
+
+    //shared memory (key, size, permissions)
+    int shmid = shmget ( SHMKEY, BUFF_SZ, 0777 | IPC_CREAT );
+
+    if ( shmid == -1 )
+    {
+        printf("Error in shared memory");
+        exit (1);
+    }
+
+    //get pointer to memory block
+    char * paddr = ( char * )( shmat ( shmid, 0, 0 ) );
+    int * pint = ( int * )( paddr );
+
+    *pint = n;
 
     // if n is bigger than s
     if(n >= s) {
@@ -68,8 +88,6 @@ int main (int argc, char **argv) {
 
             case 's':
                 s = atoi(optarg);
-
-                printf("\ninput for s was : %d\n", s);
                 break;
 
             case 'n':
