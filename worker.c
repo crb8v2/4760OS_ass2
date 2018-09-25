@@ -8,14 +8,14 @@
 #define SHMKEY 123123
 #define BUFF_SZ sizeof(int)
 
-int main(void) {
+int main() {
 
     //shared memory
     int shmid = shmget ( SHMKEY, BUFF_SZ, 0777 | IPC_CREAT );
     if ( shmid == -1 )
     {
         printf("Error in shared memory");
-        exit (1);
+        return 1;
     }
     // pointer to shared memory
     int *cint = ( int * )( shmat ( shmid, 0, 0 ) );

@@ -12,7 +12,7 @@
 #define BUFF_SZ sizeof(int)
 
 // performs forking and work to be done
-void forkerMaster (int n, int s) {
+int forkerMaster (int n, int s) {
     pid_t childpid = 0;
     int counter1;
     int status;
@@ -23,7 +23,7 @@ void forkerMaster (int n, int s) {
     if ( shmid == -1 )
     {
         printf("Error in shared memory");
-        exit (1);
+        return 1;
     }
 
     //get pointer to memory block
@@ -62,6 +62,7 @@ void forkerMaster (int n, int s) {
 
     fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
             counter1, (long)getpid(), (long)getppid(), (long)childpid);
+    return 0;
 }
 
 
