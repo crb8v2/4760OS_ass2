@@ -12,21 +12,22 @@ void forkerMaster (int n, int s) {
     int counter1;
     int status;
 
-
+    // if n is bigger than s
     if(n >= s) {
         for (counter1 = 0; counter1 < s; counter1++) {
             if (childpid = fork() == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
         }
-
         while (counter1 < n) {
+            //waits for a child to report finished
             wait(&status);
             if (childpid = fork() == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
             counter1++;
         }
+    // if n is smaller than s
     } else {
         for (counter1 = 0; counter1 < n; counter1++) {
             if (childpid = fork() == 0)
@@ -35,16 +36,8 @@ void forkerMaster (int n, int s) {
         }
     }
 
-//    // create forks
-//    for (counter1 = 0; counter1 < n; counter1++) {
-//        if (childpid = fork())
-//            execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
-//                   "Worker", NULL);
-//    }
-
     //*** children never come back to here.
-
-
+    // waits for all children to finish
     wait(NULL);
 
     fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
@@ -100,6 +93,9 @@ int main (int argc, char **argv) {
                 abort();
         }
 
+
+        // fork should be called outside of option switch
+        // so that if the forks do not begin before all options are read
         if(isForkCalled == 1){
             forkerMaster(n,s);
         }
