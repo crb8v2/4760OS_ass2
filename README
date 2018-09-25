@@ -1,0 +1,15 @@
+Connor Baniak
+CS 4760 - Assignment 2
+
+Details:
+	Calling master will fork off n children, with s children running at any given time.
+	The workers, called by execl, increment a clock in shared memory. The clock is
+	inremented by n * 1,000,000 milis for every child called.
+
+Usage:
+	./Worker 			Is an executable called by Master
+	
+	./Master -h			Master help menu
+
+	./Master -n (int) -s (int)	N forks are made, max of s at any given time
+
