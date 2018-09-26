@@ -11,6 +11,7 @@ int main() {
 
     int bufferArray[2];
     int passedNValue;
+    int counter = 0;
 
     //shared memory
     int shmid = shmget ( SHMKEY, sizeof(bufferArray[2]), 0775 | IPC_CREAT );
@@ -24,7 +25,11 @@ int main() {
 
     // *** cant pass variables out of shared memory
     passedNValue = cint[0];
-    cint[2] += (passedNValue * 1000000);
+
+    for(; counter < (passedNValue * 1000000); counter++){
+        cint[2]++;
+    }
+
 
     cint[1] = cint[1] + (cint[2] / 1000);
     cint[2] = cint[2] % (cint[1] * 1000);
