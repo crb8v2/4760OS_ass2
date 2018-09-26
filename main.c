@@ -63,12 +63,12 @@ int forkerMaster (int n, int s) {
     // waits for all children to finish
     wait(NULL);
 
-    printf("Seconds: %d Millis: %d\n", pint[1], pint[2]);
+//    printf("Seconds: %d Millis: %d\n", pint[1], pint[2]);
 
     shmdt(pint);
 
-    fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
-            counter1, (long)getpid(), (long)getppid(), (long)childpid);
+//    fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
+//            counter1, (long)getpid(), (long)getppid(), (long)childpid);
     return 0;
 }
 
