@@ -22,14 +22,12 @@ int main() {
     // pointer to shared memory that prints n
     int *cint = ( shmat ( shmid, NULL, 0 ) );
 
-    // array pos:
-    //          0 = value of n
-    //          1 = seconds
-    //          2 = milliseconds
-    // can't convert to variables w/ shared memory
+    // *** cant pass variables out of shared memory
     passedNValue = cint[0];
-    cint[0] += 1;
     cint[2] += (passedNValue * 1000000);
+
+    cint[1] = cint[1] + (cint[2] / 1000);
+    cint[2] = cint[2] % (cint[1] * 1000);
 
     printf("n is %d, seconds %d, millis %d\n", passedNValue, cint[1], cint[2]);
 
