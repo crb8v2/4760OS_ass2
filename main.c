@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <signal.h>
 
 #define SHMKEY 123123
 
@@ -62,6 +63,8 @@ int forkerMaster (int n, int s) {
     // waits for all children to finish
     wait(NULL);
 
+    printf("Seconds: %d Millis: %d\n", pint[1], pint[2]);
+
     shmdt(pint);
 
     fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
@@ -77,6 +80,11 @@ void helpMenu() {
 
 }
 
+static void ALARMhandler(int sig)
+{
+    printf("Time ran out!\n");
+    exit(EXIT_SUCCESS);
+}
 
 int main (int argc, char **argv) {
 
@@ -116,14 +124,17 @@ int main (int argc, char **argv) {
                 abort();
         }
 
-
+        signal(SIGALRM, ALARMhandler);
+        alarm(2);
         // fork should be called outside of option switch
         // so that if the forks do not begin before all options are read
         if(isForkCalled == 1){
             forkerMaster(n,s);
         }
 
-        sleep(1);
+//        do (sleep(2){
+//
+//        }
 
         return 0;
 }
