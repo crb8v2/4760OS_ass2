@@ -9,16 +9,16 @@
 #include <sys/shm.h>
 
 #define SHMKEY 123123
-#define BUFF_SZ sizeof(int)
 
 // performs forking and work to be done
 int forkerMaster (int n, int s) {
     pid_t childpid = 0;
     int counter1;
     int status;
+    int bufferArray[2];
 
     //shared memory (key, size, permissions)
-    int shmid = shmget ( SHMKEY, BUFF_SZ, 0777 | IPC_CREAT );
+    int shmid = shmget ( SHMKEY, sizeof(bufferArray[2]), 0775 | IPC_CREAT );
 
     if ( shmid == -1 )
     {
@@ -27,22 +27,24 @@ int forkerMaster (int n, int s) {
     }
 
     //get pointer to memory block
-    char * paddr = ( char * )( shmat ( shmid, 0, 0 ) );
+    char * paddr = ( char * )( shmat ( shmid, NULL, 0 ) );
     int * pint = ( int * )( paddr );
 
-    *pint = n;
+    pint[0] = n;
+    pint[1] = 0;
+    pint[2] = 0;
 
     // if n is bigger than s
     if(n >= s) {
         for (counter1 = 0; counter1 < s; counter1++) {
-            if (childpid = fork() == 0)
+            if ((childpid = fork()) == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
         }
         while (counter1 < n) {
             //waits for a child to report finished
             wait(&status);
-            if (childpid = fork() == 0)
+            if ((childpid = fork()) == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
             counter1++;
@@ -50,7 +52,7 @@ int forkerMaster (int n, int s) {
     // if n is smaller than s
     } else {
         for (counter1 = 0; counter1 < n; counter1++) {
-            if (childpid = fork() == 0)
+            if ((childpid = fork()) == 0)
             execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                    "Worker", NULL);
         }
@@ -59,6 +61,8 @@ int forkerMaster (int n, int s) {
     //*** children never come back to here.
     // waits for all children to finish
     wait(NULL);
+
+    shmdt(pint);
 
     fprintf(stderr, "i:%d, process ID:%ld, parent ID: %ld, child ID:%ld\n",
             counter1, (long)getpid(), (long)getppid(), (long)childpid);
@@ -120,7 +124,8 @@ int main (int argc, char **argv) {
         }
 
         sleep(1);
-    return 0;
+
+        return 0;
 }
 
 
