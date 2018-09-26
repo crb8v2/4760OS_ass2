@@ -11,7 +11,6 @@ int main() {
 
     int bufferArray[2];
     int passedNValue;
-    int seconds, millis;
 
     //shared memory
     int shmid = shmget ( SHMKEY, sizeof(bufferArray[2]), 0775 | IPC_CREAT );
@@ -23,19 +22,16 @@ int main() {
     // pointer to shared memory that prints n
     int *cint = ( shmat ( shmid, NULL, 0 ) );
 
-    //set nice variable names
+    // array pos:
+    //          0 = value of n
+    //          1 = seconds
+    //          2 = milliseconds
+    // can't convert to variables w/ shared memory
     passedNValue = cint[0];
-    seconds = cint[1];
-    millis = cint[2];
+    cint[0] += 1;
+    cint[2] += (passedNValue * 1000000);
 
-    printf("n is %d, seconds %d, millis %d\n", passedNValue, seconds, millis);
-
-
-
-
-
-
-
+    printf("n is %d, seconds %d, millis %d\n", passedNValue, cint[1], cint[2]);
 
     sleep(2);
 

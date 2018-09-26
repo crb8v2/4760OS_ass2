@@ -72,8 +72,8 @@ int forkerMaster (int n, int s) {
 
 void helpMenu() {
     printf("\n -- HELP MENU --\n");
-    printf("-n int    runs int number of forks\n");
-    printf("-h    open help menu\n");
+    printf("-n (int) -s (int)     runs n number of forks, with max of s at any given time\n");
+    printf("-h                    open help menu\n");
 
 }
 
