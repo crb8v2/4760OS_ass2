@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -g
+
 TARGET1 = Master
 TARGET2 = Worker
 OBJS1 = main.o
