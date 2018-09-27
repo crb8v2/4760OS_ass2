@@ -13,7 +13,6 @@
 
 // performs forking and work to be done
 int forkerMaster (int nn, int ss) {
-    pid_t childpid = 0;
     int counter1;
     int status;
     int bufferArray[2];
@@ -38,14 +37,14 @@ int forkerMaster (int nn, int ss) {
     // if n is bigger than s
     if(nn >= ss) {
         for (counter1 = 0; counter1 < ss; counter1++) {
-            if ((childpid = fork()) == 0)
+            if ((fork()) == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
         }
         while (counter1 < nn) {
             //waits for a child to report finished
             wait(&status);
-            if ((childpid = fork()) == 0)
+            if ((fork()) == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
             counter1++;
@@ -53,7 +52,7 @@ int forkerMaster (int nn, int ss) {
     // if n is smaller than s
     } else {
         for (counter1 = 0; counter1 < nn; counter1++) {
-            if ((childpid = fork()) == 0)
+            if ((fork()) == 0)
             execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                    "Worker", NULL);
         }
