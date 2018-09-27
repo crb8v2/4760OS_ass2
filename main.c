@@ -38,14 +38,14 @@ int forkerMaster (int nn, int ss) {
     if(nn >= ss) {
         for (counter1 = 0; counter1 < ss; counter1++) {
             if ((fork()) == 0)
-                execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+                execl("./Worker",
                       "Worker", NULL);
         }
         while (counter1 < nn) {
             //waits for a child to report finished
             wait(&status);
             if ((fork()) == 0)
-                execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+                execl("./Worker",
                       "Worker", NULL);
             counter1++;
         }
@@ -53,7 +53,7 @@ int forkerMaster (int nn, int ss) {
     } else {
         for (counter1 = 0; counter1 < nn; counter1++) {
             if ((fork()) == 0)
-            execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
+            execl ("./Worker",
                    "Worker", NULL);
         }
     }
