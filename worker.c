@@ -28,15 +28,16 @@ int main() {
 
     for(; counter < (passedNValue * 1000000); counter++){
         cint[2]++;
+        if(cint[2] > 999){
+            cint[1]++;
+            cint[2] = 0;
+        }
     }
 
-
-    cint[1] = cint[1] + (cint[2] / 1000);
-    cint[2] = cint[2] % (cint[1] * 1000);
-
-    printf("n is %d, seconds %d, millis %d\n", passedNValue, cint[1], cint[2]);
-
-    sleep(2);
+//    cint[1] = cint[1] + (cint[2] / 1000);
+//    cint[2] = (cint[2] % (passedNValue * 1000000));
+//    sleep(2);
+//    printf("n is %d, seconds %d, millis %d\n", passedNValue, cint[1], cint[2]);
 
     shmdt(cint);
 

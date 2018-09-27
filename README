@@ -4,8 +4,11 @@ CS 4760 - Assignment 2
 Details:
 	Calling master will fork off n children, with s children running at any given time.
 	The workers, called by execl, increment a clock in shared memory. The clock is
-	inremented by n * 1,000,000 milis for every child called.
+	inremented by n * 1,000,000 millis for every child called. After 2 seconds, the program 
+	will terminate with force. 
 
+	The idea of the project is that is the value of s = 1, no race condition occurs.
+	For values of s > 1 while n > 1, a race condition occurs.
 Usage:
 	./Worker 			Is an executable called by Master
 	

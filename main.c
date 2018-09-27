@@ -12,7 +12,7 @@
 #define SHMKEY 123123
 
 // performs forking and work to be done
-int forkerMaster (int n, int s) {
+int forkerMaster (int nn, int ss) {
     pid_t childpid = 0;
     int counter1;
     int status;
@@ -31,18 +31,18 @@ int forkerMaster (int n, int s) {
     char * paddr = ( char * )( shmat ( shmid, NULL, 0 ) );
     int * pint = ( int * )( paddr );
 
-    pint[0] = n;
+    pint[0] = nn;
     pint[1] = 0;
     pint[2] = 0;
 
     // if n is bigger than s
-    if(n >= s) {
-        for (counter1 = 0; counter1 < s; counter1++) {
+    if(nn >= ss) {
+        for (counter1 = 0; counter1 < ss; counter1++) {
             if ((childpid = fork()) == 0)
                 execl("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                       "Worker", NULL);
         }
-        while (counter1 < n) {
+        while (counter1 < nn) {
             //waits for a child to report finished
             wait(&status);
             if ((childpid = fork()) == 0)
@@ -52,7 +52,7 @@ int forkerMaster (int n, int s) {
         }
     // if n is smaller than s
     } else {
-        for (counter1 = 0; counter1 < n; counter1++) {
+        for (counter1 = 0; counter1 < nn; counter1++) {
             if ((childpid = fork()) == 0)
             execl ("/home/crbaniak/Documents/umslClasses/fall18/4760_OS/code/ass2/Worker",
                    "Worker", NULL);
@@ -63,7 +63,7 @@ int forkerMaster (int n, int s) {
     // waits for all children to finish
     wait(NULL);
 
-//    printf("Seconds: %d Millis: %d\n", pint[1], pint[2]);
+    printf("Seconds: %d Millis: %d\n", pint[1], pint[2]);
 
     shmdt(pint);
 
@@ -72,7 +72,7 @@ int forkerMaster (int n, int s) {
     return 0;
 }
 
-
+// help menu
 void helpMenu() {
     printf("\n -- HELP MENU --\n");
     printf("-n (int) -s (int)     runs n number of forks, with max of s at any given time\n");
@@ -80,7 +80,8 @@ void helpMenu() {
 
 }
 
-static void ALARMhandler(int sig)
+// alarm magic
+static void ALARMhandler()
 {
     printf("Time ran out!\n");
     exit(EXIT_SUCCESS);
@@ -88,7 +89,7 @@ static void ALARMhandler(int sig)
 
 int main (int argc, char **argv) {
 
-    int c, n = 0, s = 0;
+    int c, nn = 0, ss = 0;
     int isForkCalled = 0;
 
     // for options
@@ -100,12 +101,11 @@ int main (int argc, char **argv) {
                 break;
 
             case 's':
-                s = atoi(optarg);
+                ss = atoi(optarg);           // forks allowed at once
                 break;
 
             case 'n':
-                //get command line values
-                n = atoi(optarg);
+                nn = atoi(optarg);           // total forks
                 isForkCalled = 1;
                 break;
 
@@ -124,18 +124,15 @@ int main (int argc, char **argv) {
                 abort();
         }
 
+
+        //alarm times out if forks all do not return in 2 seconds
         signal(SIGALRM, ALARMhandler);
         alarm(2);
         // fork should be called outside of option switch
         // so that if the forks do not begin before all options are read
         if(isForkCalled == 1){
-            forkerMaster(n,s);
+            forkerMaster(nn,ss);
         }
-
-//        do (sleep(2){
-//
-//        }
-
         return 0;
 }
 
